@@ -3,8 +3,8 @@ import { getSession } from "@/lib/session";
 import crypto from "node:crypto";
 
 export async function GET(req: NextRequest) {
-  const origin = new URL(req.url).origin;
-  const redirectUri = `${origin}/api/auth/callback`;
+
+  const redirectUri = `https://sds-dev-line-oa-a0743540111e.herokuapp.com/api/auth/callback`;
 
   const state = crypto.randomUUID().replace(/-/g, "");
   const nonce = crypto.randomUUID().replace(/-/g, "");
