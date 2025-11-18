@@ -24,7 +24,9 @@ export async function GET(req: NextRequest) {
     return new Response("Invalid state", { status: 400 });
   }
 
-  const redirectUri = `https://sds-dev-line-oa-a0743540111e.herokuapp.com/api/auth/callback`;
+  const configuredBase = process.env.APP_BASE_URL ?? process.env.NEXT_PUBLIC_BASE_URL;
+  const base = (configuredBase?.trim()) || origin;
+  const redirectUri = `${base}/api/auth/callback`;
 
   try {
     // Exchange authorization code for tokens

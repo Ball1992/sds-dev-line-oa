@@ -3,8 +3,21 @@ import { getSession } from "@/lib/session";
 import crypto from "node:crypto";
 
 export async function GET(req: NextRequest) {
-
-  const redirectUri = `https://sds-dev-line-oa-a0743540111e.herokuapp.com/api/auth/callback`;
+  const { origin } = new URL(req.url);
+  const configuredBase = process.env.APP_BASE_URL ?? process.env.NEXT_PUBLIC_BASE_URL;
+  let base = (configuredBase?.trim()) || origin;
+  try {
+    const u = new URL(base);
+    // Force https in production (non-localhost)
+    if (u.hostname !== "localhost") {
+      base = `https://${u.host}`;
+    } else {
+      base = u.origin;
+    }
+  } catch {
+    base = origin;
+  }
+  const redirectUri = `${base}/api/auth/callback`;
 
   const state = crypto.randomUUID().replace(/-/g, "");
   const nonce = crypto.randomUUID().replace(/-/g, "");
